@@ -1,158 +1,151 @@
 # Roomify
 
-Roomify is a modern web application designed to simplify room booking and resource allocation for users. The platform provides a clean, intuitive interface to browse available rooms, view details, and reserve them efficiently.
+Conference room booking for teams. Users browse rooms and request time slots, admins approve or reject requests, and everyone gets notifications. Built as a MERN app: a React frontend and an Express + MongoDB API with JWT auth and role-based access.
 
-Built with a focus on real-world usability and scalable architecture, Roomify reflects practical frontend and full-stack development experience.
+**Live demo:** __DEMO_URL__ (sample data, nothing is saved). Use "Enter as admin" or "Enter as user" on the login page.
 
----
+## Features
 
-## 📌 Project Overview
+- Room catalog with capacity, amenities and an availability calendar
+- Booking requests with overlap detection, so a room cannot be double booked
+- Admin approval flow (approve or reject) with notifications to the requester
+- Smart scheduler: suggests free rooms and time slots for a date, duration and group size
+- Maintenance tracker: report issues per room, admins triage by status and priority
+- Admin analytics: booking volume, status breakdown, peak hours, most booked room
+- Audit log of admin actions, user management, and CSV export of bookings and room utilization
 
-Room booking systems are essential for managing spaces in colleges, offices, and organizations. Roomify is built to provide a simple yet powerful experience for users to:
+## Tech stack
 
-- Explore available rooms
-- View room details
-- Reserve rooms
-- Manage bookings efficiently
+| Layer | Tools |
+| --- | --- |
+| Frontend | React 18 (Create React App), React Router, Tailwind CSS, Recharts, Framer Motion |
+| Backend | Node.js 20, Express 4, Mongoose 7 |
+| Auth | JWT (24h expiry), bcrypt password hashes, `user` and `admin` roles |
+| Security | helmet, CORS allow-list, rate limiting on `/api/auth`, express-validator |
+| Tests and CI | Jest, Supertest, mongodb-memory-server, ESLint, GitHub Actions |
 
-This application showcases real-world UI design, component architecture, and integration with backend services.
-
----
-
-## 🎯 Why I Built This
-
-I developed Roomify to:
-
-- Practice building a real-world booking system
-- Strengthen frontend and backend integration skills
-- Understand component architecture at scale
-- Improve responsiveness and UI/UX practices
-- Showcase ability to handle complex state management
-
-This project demonstrates my ability to build structured, maintainable web applications that resemble professional software products.
-
----
-
-## ✨ Core Features
-
-### 🏠 Room Browsing
-- List all available rooms
-- Search and filter options
-
-### 📋 Room Details
-- View photos and descriptions
-- See capacity and amenities
-
-### 📅 Booking Management
-- Reserve rooms for specific time slots
-- View current bookings
-- Cancel or update reservations
-
-### 📱 Responsive UI
-- Fully responsive across devices  
-- Clean and modern interface
-
----
-
-## 🛠 Tech Stack
-
-### Frontend
-- **React** – Component based UI  
-- **TypeScript** – Type safety  
-- **Tailwind CSS** – Utility-first styling  
-- **Vite** – Fast development build tool  
-
-### Backend (if used)
-- **Node.js**
-- **Express.js**
-- **MongoDB** *(optional)*  
-
-### Tools
-- npm  
-- Git & GitHub  
-- ESlint / Prettier (optional)
-
----
-
-## 📂 Project Structure
+## Project structure
 
 ```
 Roomify/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── hooks/
-│   ├── context/
-│   ├── utils/
-│   ├── App.tsx
-│   └── main.tsx
-├── package.json
-├── vite.config.ts
-├── tailwind.config.js
-└── README.md
+├── backend/
+│   ├── app.js            Express app (middleware and routes)
+│   ├── server.js         Startup: env checks, MongoDB connection, listen
+│   ├── controllers/      Request handlers
+│   ├── middleware/       JWT auth and role checks
+│   ├── models/           Mongoose schemas
+│   ├── routes/           Route definitions
+│   ├── seed.js           Demo data
+│   └── tests/            API tests
+├── frontend/
+│   └── src/
+│       ├── api/          Axios client and the demo-mode fake API
+│       ├── components/
+│       ├── context/      Auth state
+│       └── pages/
+├── POSTMAN_COLLECTION.json
+└── .github/workflows/ci.yml
 ```
 
----
+## Run it locally
 
-## ⚙️ Installation & Setup
+You need Node.js 20 or newer and a MongoDB instance (local, or a free MongoDB Atlas cluster).
 
-### 🧾 Clone the repository
+### 1. Backend
+
 ```bash
-git clone https://github.com/Nitish-1303/Roomify.git
-```
-
-### 📁 Navigate into the project
-```bash
-cd Roomify
-```
-
-### 📦 Install dependencies
-```bash
+cd backend
+cp .env.example .env      # then set JWT_SECRET and MONGODB_URI
 npm install
+npm run seed              # loads demo data
+npm run dev               # http://localhost:5000
 ```
 
-### 🚀 Start development server
+`npm run seed` deletes everything in the target database before inserting demo data. Do not point it at a database you care about.
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `MONGODB_URI` | yes | MongoDB connection string |
+| `JWT_SECRET` | yes | Signing key, at least 16 characters (`openssl rand -hex 32`) |
+| `CORS_ORIGIN` | no | Comma-separated browser origins allowed to call the API. Default `http://localhost:3000` |
+| `AUTH_RATE_LIMIT` | no | Login and register attempts per IP per 15 minutes. Default 20 |
+| `PORT` | no | Default 5000 |
+
+The server refuses to start if `JWT_SECRET` or `MONGODB_URI` is missing.
+
+### 2. Frontend
+
 ```bash
-npm run dev
+cd frontend
+npm install
+npm start                 # http://localhost:3000
 ```
 
-The application will run at:
+Set `REACT_APP_API_URL` if the API is not at `http://localhost:5000/api`.
 
+### Demo mode (no backend)
+
+```bash
+cd frontend
+REACT_APP_DEMO=true npm start
 ```
-http://localhost:5173
+
+The app runs against built-in sample data. Nothing is saved and a page reload resets it. This is what the live demo uses.
+
+### Demo accounts (after `npm run seed`, and in demo mode)
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@roomify.com` | `admin123` |
+| User | `user@roomify.com` | `user123` |
+
+These are sample credentials for local use. Change or remove them before deploying a real instance.
+
+## API overview
+
+All routes are under `/api`. Everything except `/auth/*` and `/health` needs `Authorization: Bearer <token>`.
+
+| Method and path | Access | Description |
+| --- | --- | --- |
+| `POST /auth/register` | public | Create a user. The role is always `user` |
+| `POST /auth/login` | public | Returns a JWT and the user |
+| `GET /rooms` | user | List rooms |
+| `POST /rooms` | admin | Create a room |
+| `GET /bookings` | user | Own bookings (admins see all) |
+| `POST /bookings` | user | Request a booking |
+| `PUT /bookings/:id/approve`, `PUT /bookings/:id/reject` | admin | Decide a request |
+| `GET /smart/suggestions`, `GET /smart/heatmap` | user | Scheduling suggestions and usage heatmap |
+| `GET /maintenance`, `POST /maintenance` | user | List and report issues |
+| `GET /maintenance/stats`, `PUT /maintenance/:id` | admin | Issue stats and updates |
+| `GET /notifications`, `PUT /notifications/:id/read`, `PUT /notifications/read-all` | user | Notifications |
+| `GET /stats/overview` | admin | Dashboard numbers |
+| `GET /audit` | admin | Audit log |
+| `GET /reports/bookings`, `GET /reports/rooms` | admin | CSV exports |
+| `GET /reports/calendar/:roomId` | user | Bookings for a room |
+| `/users` | admin | List, create, update and delete users |
+| `PUT /users/profile/me`, `PUT /users/password/change` | user | Update own profile and password |
+
+A Postman collection is included in `POSTMAN_COLLECTION.json`.
+
+## Tests
+
+```bash
+cd backend
+npm test
 ```
 
----
+The API tests run against an in-memory MongoDB, so no database setup is needed. They cover login and registration (including that a caller cannot pick their own role), role checks on admin routes, double-booking rejection, booking approval and CORS. CI runs lint and tests for the backend and a production build of the frontend on every push and pull request.
 
-## 🔮 What This Project Demonstrates
+## Roadmap
 
-- Structured and reusable component design  
-- Clean folder organization  
-- Frontend state management skills  
-- Responsive UI principles  
-- Practical experience with modern web tools  
+- Email notifications for booking decisions
+- Recurring bookings
+- Frontend tests
 
----
+## Author
 
-## 🛠️ Future Improvements
+Yeluru Nitish
 
-- User authentication and roles  
-- Integration with backend / database  
-- Calendar view for bookings  
-- Email notifications on booking status  
-- Admin dashboard for room management  
+## License
 
----
-
-## 👨‍💻 Author
-
-Yeluru Nitish  
-Aspiring Software Developer | Frontend & Full-Stack Engineer
-
----
-
-## 📜 License
-
-This project is open-source under the MIT License.
+MIT
