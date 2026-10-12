@@ -85,6 +85,7 @@ export const CircularTestimonials = ({
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex, testimonialsLength]);
 
   // Navigation handlers
