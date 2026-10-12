@@ -455,9 +455,9 @@ function AnimatedCharactersLogin() {
         </div>
 
         <div className="relative z-20 flex items-center gap-8 text-sm text-primary-foreground/60">
-          <a href="#" className="hover:text-primary-foreground transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-primary-foreground transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-primary-foreground transition-colors">Contact</a>
+          <span className="hover:text-primary-foreground transition-colors cursor-default">Privacy Policy</span>
+          <span className="hover:text-primary-foreground transition-colors cursor-default">Terms of Service</span>
+          <span className="hover:text-primary-foreground transition-colors cursor-default">Contact</span>
         </div>
 
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
@@ -526,9 +526,9 @@ function AnimatedCharactersLogin() {
                   Remember for 30 days
                 </Label>
               </div>
-              <a href="#" className="text-sm text-primary hover:underline font-medium">
-                Forgot password?
-              </a>
+              <span className="text-sm text-primary font-medium">
+                Forgot password? Ask an admin.
+              </span>
             </div>
 
             {error && (
@@ -557,7 +557,7 @@ function AnimatedCharactersLogin() {
 
           <div className="text-center text-sm text-muted-foreground mt-8">
             Don't have an account?{" "}
-            <a href="#" className="text-foreground font-medium hover:underline">Sign Up</a>
+            <span className="text-foreground font-medium">Ask an admin for an account</span>
           </div>
         </div>
       </div>
