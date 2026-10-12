@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'All fields required' });
@@ -54,7 +54,7 @@ exports.register = async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, passwordHash, role: role || 'user' });
+    const user = new User({ name, email, passwordHash, role: 'user' });
     await user.save();
 
     res.status(201).json({ message: 'User created successfully' });
