@@ -4,7 +4,7 @@ import api from '../api/axios';
 import { User, Mail, Lock, Save, Shield } from 'lucide-react';
 
 const Profile = () => {
-  const { user, login } = useAuth();
+  const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   
@@ -24,9 +24,7 @@ const Profile = () => {
     setLoading(true);
     try {
       const response = await api.put('/users/profile/me', profileData);
-      // Update local storage
-      const token = localStorage.getItem('token');
-      await login(profileData.email, ''); // This will refresh the user data
+      updateUser(response.data.user);
       alert('Profile updated successfully!');
     } catch (error) {
       alert(error.response?.data?.error || 'Failed to update profile');
