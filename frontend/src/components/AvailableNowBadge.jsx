@@ -9,6 +9,7 @@ const AvailableNowBadge = ({ roomId, bookings = [] }) => {
     checkAvailability();
     const interval = setInterval(checkAvailability, 60000); // Check every minute
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookings]);
 
   const checkAvailability = () => {

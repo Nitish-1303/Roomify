@@ -20,8 +20,6 @@ const Rooms = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [error, setError] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'calendar'
   const [selectedCalendarRoom, setSelectedCalendarRoom] = useState(null);
@@ -136,8 +134,6 @@ const Rooms = () => {
       });
       
       setShowModal(false);
-      setStartDate('');
-      setEndDate('');
       alert('Booking request submitted successfully! 🎉');
     } catch (err) {
       setError(err.response?.data?.error || 'Booking failed');

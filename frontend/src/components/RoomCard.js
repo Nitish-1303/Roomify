@@ -5,28 +5,6 @@ import { FlowButton } from './ui/flow-button';
 import AvailableNowBadge from './AvailableNowBadge';
 
 const RoomCard = ({ room, onBook, index, bookings = [] }) => {
-  const getGradient = () => {
-    const gradients = [
-      'from-violet-500 via-purple-500 to-fuchsia-500',
-      'from-cyan-500 via-blue-500 to-indigo-500',
-      'from-emerald-500 via-teal-500 to-cyan-500',
-      'from-orange-500 via-red-500 to-pink-500',
-      'from-amber-500 via-yellow-500 to-lime-500',
-    ];
-    return gradients[index % gradients.length];
-  };
-
-  const getPattern = () => {
-    const patterns = [
-      'bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]',
-      'bg-[radial-gradient(ellipse_at_top,rgba(186,230,253,0.3),transparent)]',
-      'bg-[radial-gradient(circle_at_bottom_left,rgba(167,243,208,0.3),transparent)]',
-      'bg-[radial-gradient(circle_at_top_right,rgba(254,202,202,0.3),transparent)]',
-      'bg-[radial-gradient(ellipse_at_bottom,rgba(253,230,138,0.3),transparent)]',
-    ];
-    return patterns[index % patterns.length];
-  };
-
   const getRoomImage = () => {
     const images = [
       'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80', // Modern office

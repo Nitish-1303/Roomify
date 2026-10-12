@@ -14,13 +14,8 @@ import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 import SmartScheduler from './pages/SmartScheduler';
 import Maintenance from './pages/Maintenance';
-import FeatureDemo from './pages/FeatureDemo';
-import TestimonialsDemo from './pages/TestimonialsDemo';
 import FeaturesPage from './pages/FeaturesPage';
 import FAQPage from './pages/FAQPage';
-import FileUploadExamples from './pages/FileUploadExamples';
-import FileInputDemo from './pages/FileInputDemo';
-import LogoShowcase from './pages/LogoShowcase';
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -56,13 +51,11 @@ function App() {
                     <Route path="/users" element={<UserManagement />} />
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/profile" element={<Profile />} />
-                    <Route path="/feature-demo" element={<FeatureDemo />} />
-                    <Route path="/testimonials" element={<TestimonialsDemo />} />
+
                     <Route path="/features" element={<FeaturesPage />} />
                     <Route path="/faq" element={<FAQPage />} />
-                    <Route path="/file-upload-examples" element={<FileUploadExamples />} />
-                    <Route path="/file-input-demo" element={<FileInputDemo />} />
-                    <Route path="/logo-showcase" element={<LogoShowcase />} />
+
+
                     <Route path="/" element={<Navigate to="/rooms" />} />
                   </Routes>
                 </PrivateRoute>

@@ -11,6 +11,7 @@ const AuditLogs = () => {
 
   useEffect(() => {
     fetchLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, filterAction]);
 
   const fetchLogs = async () => {
