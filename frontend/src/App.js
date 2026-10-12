@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './components/ui/toast';
 import Navbar from './components/Navbar';
+import { DEMO_MODE } from './api/axios';
 import Login from './pages/Login';
 import Rooms from './pages/Rooms';
 import Bookings from './pages/Bookings';
@@ -33,6 +34,11 @@ function App() {
       <ToastProvider>
         <BrowserRouter>
           <div className="min-h-screen gradient-primary">
+          {DEMO_MODE && (
+            <div className="bg-amber-400 text-black text-center text-sm py-1 font-medium">
+              Demo mode: sample data, nothing is saved. Reload to reset.
+            </div>
+          )}
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
