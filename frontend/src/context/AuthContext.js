@@ -1,11 +1,15 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import api, { DEMO_MODE } from '../api/axios';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
+  if (DEMO_MODE && !String(localStorage.getItem('token') || '').startsWith('demo-token-')) {
+    localStorage.setItem('token', 'demo-token-u-1');
+    localStorage.setItem('user', JSON.stringify({ _id: 'u-1', name: 'Priya Sharma', email: 'user@roomify.com', role: 'user' }));
+  }
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
@@ -19,8 +23,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-    const response = await axios.post(`${apiUrl}/auth/login`, {
+    const response = await api.post('/auth/login', {
       email,
       password
     });

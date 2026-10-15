@@ -1,158 +1,37 @@
 # Roomify
 
-Roomify is a modern web application designed to simplify room booking and resource allocation for users. The platform provides a clean, intuitive interface to browse available rooms, view details, and reserve them efficiently.
+A meeting-room booking demo built with React. Open it, pick a room, send a request and switch to the admin view to approve it. No account or backend setup is needed for the default demo.
 
-Built with a focus on real-world usability and scalable architecture, Roomify reflects practical frontend and full-stack development experience.
+## Try the flow
 
----
+1. Browse five sample rooms and filter by capacity or time.
+2. Request a future time slot.
+3. Open My bookings to see the pending request.
+4. Choose Review as admin, then approve or decline it.
+5. Choose View as member to see the result.
 
-## 📌 Project Overview
+All rooms and people are sample data. Bookings stay in this browser's local storage; they are not real reservations. Reset demo restores the sample bookings. This is not a shared, multi-user service. Room photographs are illustrative.
 
-Room booking systems are essential for managing spaces in colleges, offices, and organizations. Roomify is built to provide a simple yet powerful experience for users to:
+## Frontend
 
-- Explore available rooms
-- View room details
-- Reserve rooms
-- Manage bookings efficiently
-
-This application showcases real-world UI design, component architecture, and integration with backend services.
-
----
-
-## 🎯 Why I Built This
-
-I developed Roomify to:
-
-- Practice building a real-world booking system
-- Strengthen frontend and backend integration skills
-- Understand component architecture at scale
-- Improve responsiveness and UI/UX practices
-- Showcase ability to handle complex state management
-
-This project demonstrates my ability to build structured, maintainable web applications that resemble professional software products.
-
----
-
-## ✨ Core Features
-
-### 🏠 Room Browsing
-- List all available rooms
-- Search and filter options
-
-### 📋 Room Details
-- View photos and descriptions
-- See capacity and amenities
-
-### 📅 Booking Management
-- Reserve rooms for specific time slots
-- View current bookings
-- Cancel or update reservations
-
-### 📱 Responsive UI
-- Fully responsive across devices  
-- Clean and modern interface
-
----
-
-## 🛠 Tech Stack
-
-### Frontend
-- **React** – Component based UI  
-- **TypeScript** – Type safety  
-- **Tailwind CSS** – Utility-first styling  
-- **Vite** – Fast development build tool  
-
-### Backend (if used)
-- **Node.js**
-- **Express.js**
-- **MongoDB** *(optional)*  
-
-### Tools
-- npm  
-- Git & GitHub  
-- ESlint / Prettier (optional)
-
----
-
-## 📂 Project Structure
-
-```
-Roomify/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── hooks/
-│   ├── context/
-│   ├── utils/
-│   ├── App.tsx
-│   └── main.tsx
-├── package.json
-├── vite.config.ts
-├── tailwind.config.js
-└── README.md
-```
-
----
-
-## ⚙️ Installation & Setup
-
-### 🧾 Clone the repository
 ```bash
-git clone https://github.com/Nitish-1303/Roomify.git
+cd frontend
+npm ci
+npm start
 ```
 
-### 📁 Navigate into the project
+Demo mode is on by default. A production build is static:
+
 ```bash
-cd Roomify
+CI=true npm run build
 ```
 
-### 📦 Install dependencies
-```bash
-npm install
-```
+For Vercel, use root `frontend`, build command `npm run build`, and output directory `build`. The included rewrite supports refreshing nested routes. No API URL or secret is needed for demo mode. Leave `REACT_APP_DEMO` unset or set it to `true`.
 
-### 🚀 Start development server
-```bash
-npm run dev
-```
+## Optional API
 
-The application will run at:
+The Express/MongoDB backend remains in `backend/` as separate development work. It is not used by the demo. To use a real API, set `REACT_APP_DEMO=false` and `REACT_APP_API_URL` before building. The backend security and test PRs must be reviewed before treating that API as production-ready. Do not use sample demo credentials for real accounts.
 
-```
-http://localhost:5173
-```
+## Checks
 
----
-
-## 🔮 What This Project Demonstrates
-
-- Structured and reusable component design  
-- Clean folder organization  
-- Frontend state management skills  
-- Responsive UI principles  
-- Practical experience with modern web tools  
-
----
-
-## 🛠️ Future Improvements
-
-- User authentication and roles  
-- Integration with backend / database  
-- Calendar view for bookings  
-- Email notifications on booking status  
-- Admin dashboard for room management  
-
----
-
-## 👨‍💻 Author
-
-Yeluru Nitish  
-Aspiring Software Developer | Frontend & Full-Stack Engineer
-
----
-
-## 📜 License
-
-This project is open-source under the MIT License.
+The frontend is checked with a CI-mode production build and browser tests covering member requests, reload persistence, admin approval and member status. The demo flow makes no backend requests. The backend has its own separate test work; the static demo does not imply that a live API has been deployed.

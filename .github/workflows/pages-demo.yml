@@ -1,0 +1,64 @@
+name: Publish recruiter demo
+on:
+  push:
+    branches: [feat/recruiter-demo]
+    paths: [.github/workflows/pages-demo.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: recruiter-demo-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Prepare Pages-only routing
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path('frontend/src')
+          app = root / 'App.js'
+          app.write_text(app.read_text().replace('BrowserRouter', 'HashRouter'))
+          for filename in ['pages/Rooms.js', 'components/RoomCard.js']:
+              path = root / filename
+              text = path.read_text()
+              text = text.replace('src="/images/room-studio.svg"', 'src={`${process.env.PUBLIC_URL}/images/room-studio.svg`}')
+              for image in ['room-studio', 'room-boardroom', 'room-lounge']:
+                  text = text.replace('"/images/' + image + '.svg"', '`${process.env.PUBLIC_URL}/images/' + image + '.svg`')
+              path.write_text(text)
+          toolbar = root / 'components/DemoToolbar.jsx'
+          toolbar.write_text(toolbar.read_text().replace("window.location.assign('/rooms')", "window.location.assign(process.env.PUBLIC_URL + '/#/rooms')"))
+          PY
+      - run: npm ci
+        working-directory: frontend
+      - name: Build static demo
+        run: npm run build
+        working-directory: frontend
+        env:
+          CI: true
+          GENERATE_SOURCEMAP: false
+          REACT_APP_DEMO: true
+          PUBLIC_URL: /Roomify
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: frontend/build
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy demo
+        id: deployment
+        uses: actions/deploy-pages@v4

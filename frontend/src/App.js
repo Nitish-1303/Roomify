@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './components/ui/toast';
 import Navbar from './components/Navbar';
+import DemoToolbar from './components/DemoToolbar';
+import { DEMO_MODE } from './api/axios';
 import Login from './pages/Login';
 import Rooms from './pages/Rooms';
 import Bookings from './pages/Bookings';
@@ -32,14 +34,15 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
-          <div className="min-h-screen gradient-primary">
+          <div className="min-h-screen studio-app">
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={DEMO_MODE ? <Navigate to="/rooms" replace /> : <Login />} />
             <Route
               path="/*"
               element={
                 <PrivateRoute>
                   <Navbar />
+                  {DEMO_MODE && <DemoToolbar />}
                   <Routes>
                     <Route path="/rooms" element={<Rooms />} />
                     <Route path="/bookings" element={<Bookings />} />
