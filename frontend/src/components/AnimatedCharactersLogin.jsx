@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { DEMO_MODE } from "../api/axios";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
@@ -246,6 +247,17 @@ function AnimatedCharactersLogin() {
       navigate('/rooms');
     } catch (err) {
       setError(err.response?.data?.error || 'Invalid email or password. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const demoLogin = async (demoEmail, demoPassword) => {
+    setError("");
+    setIsLoading(true);
+    try {
+      await login(demoEmail, demoPassword);
+      navigate('/rooms');
     } finally {
       setIsLoading(false);
     }
@@ -530,6 +542,20 @@ function AnimatedCharactersLogin() {
                 Forgot password? Ask an admin.
               </span>
             </div>
+
+            {DEMO_MODE && (
+              <div className="mb-4 rounded-lg border border-dashed p-3 text-sm">
+                <p className="font-medium mb-2">Live demo with sample data. Nothing is saved.</p>
+                <div className="flex gap-2">
+                  <button type="button" className="flex-1 rounded-md border px-3 py-2 hover:bg-muted" onClick={() => demoLogin('admin@roomify.com', 'admin123')}>
+                    Enter as admin
+                  </button>
+                  <button type="button" className="flex-1 rounded-md border px-3 py-2 hover:bg-muted" onClick={() => demoLogin('user@roomify.com', 'user123')}>
+                    Enter as user
+                  </button>
+                </div>
+              </div>
+            )}
 
             {error && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
