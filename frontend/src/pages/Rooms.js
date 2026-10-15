@@ -156,7 +156,7 @@ const Rooms = () => {
         <div className="studio-hero-art">
           <div className="studio-photo-backing" />
           <img
-            src="/images/room-studio.jpg"
+            src="/images/room-studio.svg"
             alt="A light-filled meeting space with a shared table"
           />
           <span className="studio-sticker studio-sticker-top">
