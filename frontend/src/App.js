@@ -37,7 +37,7 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
-          <div className="min-h-screen gradient-primary">
+          <div className="min-h-screen studio-app">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
