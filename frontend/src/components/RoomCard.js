@@ -2,9 +2,9 @@ import React from "react";
 import { ArrowUpRight, Users, MapPin } from "lucide-react";
 
 const roomPhotos = [
-  "/images/room-studio.jpg",
-  "/images/room-boardroom.jpg",
-  "/images/room-lounge.jpg",
+  "/images/room-studio.svg",
+  "/images/room-boardroom.svg",
+  "/images/room-lounge.svg",
 ];
 
 const amenityLabels = {
